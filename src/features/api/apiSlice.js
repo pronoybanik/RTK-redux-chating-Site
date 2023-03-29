@@ -1,5 +1,4 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { logDOM } from "@testing-library/react";
 
 export const apiSlice = createApi({
   reducerPath: "api",

@@ -2,7 +2,7 @@ import gravatarUrl from "gravatar-url";
 import moment from "moment";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { useGetConversationQuery } from "../../features/conversations/conversationsApi";
+import { useGetConversationsQuery } from "../../features/conversations/conversationsApi";
 import Error from "../ui/Error";
 import getPartnerInfo from "../utils/getPartnerInfo";
 import ChatItem from "./ChatItem";
@@ -15,7 +15,7 @@ export default function ChatItems() {
     isLoading,
     isError,
     error,
-  } = useGetConversationQuery(email);
+  } = useGetConversationsQuery(email);
 
   // decide what to render
   let content = null;

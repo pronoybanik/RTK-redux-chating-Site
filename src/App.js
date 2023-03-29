@@ -53,9 +53,3 @@ function App() {
 }
 
 export default App;
- // {
-    //   "email": "sumit@learnwithsumit.com",
-    //   "password": "$2a$10$CtHS.yCGS80jiuZx8yKEI.5zdiZykHF/6aPTDqpHl6ZqEFGISOHKO",
-    //   "name": "Sumit Saha",
-    //   "id": 1
-    // },
