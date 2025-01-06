@@ -2,8 +2,11 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { conversationsApi } from "../../features/conversations/conversationsApi";
 import { useGetUserQuery } from "../../features/user/userApi";
+import { useEditConversationMutation } from "../../features/conversations/conversationsApi"
+import { useAddConversationMutation } from "../../features/conversations/conversationsApi"
 import Error from "../ui/Error";
 import isValidEmail from "../ui/isValidEmail";
+
 
 export default function Modal({ open, control }) {
 
@@ -12,13 +15,26 @@ export default function Modal({ open, control }) {
     const [userCheck, setUserCheck] = useState(false);
     const { user: loggedInUser } = useSelector((state) => state.auth) || {};
     const { email: myEmail } = loggedInUser || {};
-    const dispatch = useDispatch();
     const [responseError, setResponseError] = useState("");
     const [conversation, setConversation] = useState(undefined);
+    const dispatch = useDispatch();
 
     const { data: participant } = useGetUserQuery(to, {
         skip: !userCheck,
     });
+
+
+    const [editConversation, { isSuccess: isEditConversationSuccess }] = useEditConversationMutation();
+    const [addConversation, { isSuccess: isAddConversationSuccess }] = useAddConversationMutation();
+
+
+
+    useEffect(() => {
+        if (isAddConversationSuccess || isEditConversationSuccess) {
+            control();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [isAddConversationSuccess, isEditConversationSuccess]);
 
     useEffect(() => {
         if (participant?.length > 0 && participant[0].email !== myEmail) {
@@ -36,7 +52,7 @@ export default function Modal({ open, control }) {
                 .catch((err) => {
                     setResponseError("There was a problem!");
                 });
-        }
+        };
     }, [participant, dispatch, myEmail, to]);
 
     const debounceHandler = (fn, delay) => {
@@ -62,6 +78,30 @@ export default function Modal({ open, control }) {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Form submitted");
+        if (conversation?.length > 0) {
+            // edit conversation
+            editConversation({
+                id: conversation[0].id,
+                sender: myEmail,
+                data: {
+                    participants: `${myEmail}-${participant[0].email}`,
+                    users: [loggedInUser, participant[0]],
+                    message,
+                    timestamp: new Date().getTime(),
+                },
+            });
+        } else if (conversation?.length === 0) {
+            // add conversation
+            addConversation({
+                sender: myEmail,
+                data: {
+                    participants: `${myEmail}-${participant[0].email}`,
+                    users: [loggedInUser, participant[0]],
+                    message,
+                    timestamp: new Date().getTime(),
+                }
+            });
+        }
     };
 
     return (

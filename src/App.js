@@ -7,6 +7,7 @@ import Inbox from "./pages/Inbox";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 
+// module - 9,10
 function App() {
   const authChecked = useAuthHook();
 

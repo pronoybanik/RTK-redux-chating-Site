@@ -10,6 +10,7 @@ export default function ChatBody() {
   const { id } = useParams();
   const { data: messages, isLoading, isError, error } = useGetMessagesQuery(id);
 
+  
   // decide what to render
   let content = null;
 
@@ -28,7 +29,7 @@ export default function ChatBody() {
       <>
         <ChatHead message={messages[0]} />
         <Messages messages={messages} />
-        <Options />
+        <Options  info={messages[0]}/>
       </>
     );
   }
